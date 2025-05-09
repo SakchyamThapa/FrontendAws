@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redeem Sonic Points</title>
+    <link rel="stylesheet" href="../Css/Redeem.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    
+  </head>
+  <body>
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!--g user dropdown with the full navbar -->
+<header class="main-navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <img src="/src/download.png" alt="Sonic Logo">
+      <h2>Sonic Points</h2>
+    </div>
+    
+    <div class="nav-links">
+      <a href="/Html/Home.html?projectId=${projectId}" class="nav-link">Dashboard</a>
+      <a href="/Html/WorkManagement.html?projectId=${projectId}" class="nav-link">Work Management</a>
+      <a href="/Html/Leaderboard.html?projectId=${projectId}" class="nav-link">Leaderboard</a>
+      <a href="/Html/Redeem.html?projectId=${projectId}" class="nav-link active">Redeem</a>
+    </div>
+    
+    <div class="user-section">
+      <div class="dropdown">
+        <button class="btn dropdown-toggle user-icon" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="user-label">Admin User</span>
+          <i class="fas fa-user-circle"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+          <li><a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i> Profile</a></li>
+          <li><a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i> Settings</a></li>
+          <li><a class="dropdown-item" href="#"><i class="fas fa-gift mr-2"></i> Redeem</a></li>
+          <li><a class="dropdown-item" href="#" id="redemption-history-btn"><i class="fas fa-history mr-2"></i> Redemption History</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+    <!-- Redeem Page Container -->
+    <div class="redeem-container">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="logo">
+          <img src="/src/download.png" alt="Sonic Logo" />
+          <h1>Redeem Your Sonic Points</h1>
+        </div>
+        <div class="user-points">
+          <i class="fas fa-star"></i>
+          <span id="user-points">Loading points...</span>
+        </div>
+      </div>
+
+      <!-- Items Section -->
+      <div class="items-section">
+        <div class="row" id="redeem-items">
+          <!-- Loading spinner -->
+          <div class="loading-spinner">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-section">
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+              <a class="page-link" href="#" id="prev-page">Previous</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" id="next-page">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Modal for displaying messages -->
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="modalTitle">Message</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalBody">
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn redeem-btn" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Redemption History Modal -->
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content glass-effect">
+          <div class="modal-header border-0">
+            <h5 class="modal-title"><i class="fas fa-history"></i> Your Redemption History</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-hover" style="color: white;">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Points Used</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <!-- Will be populated by JavaScript -->
+                  <tr>
+                    <td colspan="4" class="text-center">
+                      <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn redeem-btn" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../Js/Redeem.js"></script>
+  </body>
+</html>

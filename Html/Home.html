@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Your Name" />
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="../Css/Home.css" />
+</head>
+<body>
+  <div id="messageBox" class="message-box"></div>
+
+  <header class="welcome-section">
+    <h1>Welcome, <span id="username">User</span>!</h1>
+    <p>Here are your ongoing projects and their progress:</p>
+  </header>
+
+  <main class="dashboard">
+    <!-- Create New Project Section -->
+    <div style="width: 100%; text-align: left; margin-bottom: 20px">
+      <button class="create-project-btn" onclick="toggleProjectForm()">
+        + Create New Project
+      </button>
+      <div id="create-project-form" class="create-form" style="display: none;">
+        <form id="new-project-form" onsubmit="createProject(event)">
+          <input type="text" id="project-title" placeholder="Enter project title..." required />
+          <textarea id="project-description" placeholder="Enter project description..." rows="3"></textarea>
+          <input type="date" id="project-deadline" required />
+          <div class="form-actions">
+            <button type="submit" class="add-btn">Add Project</button>
+            <button type="button" class="cancel-btn" onclick="toggleProjectForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Projects dynamically rendered here -->
+    <div id="project-list" class="main-wrap" style="display: flex;
+    "></div>
+
+    <p class="no-projects" id="no-projects-msg" style="display: none">
+      You have no ongoing projects.
+      <button class="create-project-btn" onclick="toggleProjectForm()">
+        Create New Project
+      </button>
+    </p>
+  </main>
+
+  <footer>
+    <p>© 2024 Your Company. All rights reserved.</p>
+  </footer>
+
+  
+  <!-- ✅ Load JS Modules here -->
+  <script type="module" src="../Js/Home.js"></script>
+</body>
+</html>

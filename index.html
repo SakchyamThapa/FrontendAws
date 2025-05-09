@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SonicPoints - Login & Register</title>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./Css/login.css" />
+  </head>
+  <body>
+    <div class="background-container">
+      <div class="overlay"></div>
+
+      <div class="container">
+        <div class="logo">Sonic<span>Points</span></div>
+        
+        <!-- Login Section -->
+        <div id="loginPage" class="form-container active">
+          <h2>Welcome Back</h2>
+          <p>Please login to your account</p>
+          <form id="loginForm">
+            <div class="input-group">
+              <input type="email" id="loginEmail" placeholder="Email" required />
+              <div class="input-error" id="loginEmailError"></div>
+            </div>
+            <div class="input-group">
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+                required
+              />
+              <div class="input-error" id="loginPasswordError"></div>
+            </div>
+            <button type="submit" id="loginBtn">Login</button>
+          </form>
+          <p class="switch-text">
+            Don't have an account? <a href="#" id="toRegister">Register</a>
+          </p>
+        </div>
+
+        <!-- Registration Section -->
+        <div id="registerPage" class="form-container">
+          <h2>Create Account</h2>
+          <form id="registerForm">
+            <div class="input-group">
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Full Name"
+                required
+              />
+              <div class="input-error" id="fullNameError"></div>
+            </div>
+            <div class="input-group">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+              />
+              <div class="input-error" id="emailError"></div>
+            </div>
+            <div class="input-group">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <div class="password-strength" id="passwordStrength"></div>
+              <div class="strength-text" id="strengthText"></div>
+              <div class="input-error" id="passwordError"></div>
+            </div>
+            <div class="input-group">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                required
+              />
+              <div class="input-error" id="confirmPasswordError"></div>
+            </div>
+            <button type="submit" id="registerBtn">Register</button>
+          </form>
+          <p class="switch-text">
+            Already have an account? <a href="#" id="toLogin">Login</a>
+          </p>
+        </div>
+
+        <div id="messageBox"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./Js/login.js"></script>
+
+  </body>
+</html>

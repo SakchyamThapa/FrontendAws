@@ -1,0 +1,365 @@
+/* Base styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden; /* Prevent body scrolling */
+}
+
+/* User Icon Dropdown (Top-Right) */
+.top-right-user {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+/* Base styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #4570d5;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    padding: 0.8rem 1rem !important;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* User Icon Dropdown (Top-Right) */
+.top-right-user {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.user-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.user-icon:hover i {
+    color: #d0e1fd;
+}
+
+/* Leaderboard Container */
+.leaderboard-container {
+    width: 95%;
+    max-width: 1000px;
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    color: #333;
+    margin: 100px auto 40px auto; /* Added top margin to accommodate navbar */
+    max-height: calc(100vh - 130px); /* Adjust box height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Bar */
+.top-bar {
+    background: #2575fc;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-bar .logo img {
+    height: 50px;
+}
+
+.top-bar h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.user-points {
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-points i {
+    font-size: 1.3rem;
+    color: gold;
+}
+
+/* Leaderboard Section */
+.leaderboard {
+    flex: 1;
+    overflow-y: auto; /* Make content scrollable */
+    padding: 20px;
+    text-align: center;
+}
+
+.leaderboard h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #2575fc;
+    font-weight: 600;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+thead {
+    background: #2575fc;
+    color: #fff;
+}
+
+thead th {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+tbody {
+    max-height: calc(80vh - 200px); /* Adjust table content height for scrolling */
+    overflow-y: auto;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:nth-child(even) {
+    background: #f7f9fc;
+}
+
+tbody tr:hover {
+    background: rgba(37, 117, 252, 0.1);
+}
+
+tbody td {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+tbody td:first-child {
+    font-weight: 600;
+    text-align: center;
+}
+
+tbody td:last-child {
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .top-bar h1 {
+        font-size: 1.2rem;
+    }
+
+    .user-points {
+        font-size: 0.9rem;
+    }
+
+    .leaderboard-container {
+        max-height: calc(100vh - 160px); /* Adjust for smaller screens */
+        margin-top: 80px;
+    }
+}
+
+.user-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    outline: none;
+    transition: color 0.3s ease;
+}
+
+.user-icon:hover i {
+    color: #d0e1fd;
+}
+
+/* Leaderboard Container */
+.leaderboard-container {
+    width: 95%;
+    max-width: 1000px;
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    color: #333;
+    margin-top: 80px;
+    max-height: 80vh; /* Adjust box height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Bar */
+.top-bar {
+    background: #2575fc;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-bar .logo img {
+    height: 50px;
+}
+
+.top-bar h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.user-points {
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-points i {
+    font-size: 1.3rem;
+    color: gold;
+}
+
+/* Leaderboard Section */
+.leaderboard {
+    flex: 1;
+    overflow-y: auto; /* Make content scrollable */
+    padding: 20px;
+    text-align: center;
+}
+
+.leaderboard h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #2575fc;
+    font-weight: 600;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+thead {
+    background: #2575fc;
+    color: #fff;
+}
+
+thead th {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+tbody {
+    max-height: calc(80vh - 200px); /* Adjust table content height for scrolling */
+    overflow-y: auto;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+tbody tr:nth-child(even) {
+    background: #f7f9fc;
+}
+
+tbody tr:hover {
+    background: rgba(37, 117, 252, 0.1);
+}
+
+tbody td {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+tbody td:first-child {
+    font-weight: 600;
+    text-align: center;
+}
+
+tbody td:last-child {
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .top-bar h1 {
+        font-size: 1.2rem;
+    }
+
+    .user-points {
+        font-size: 0.9rem;
+    }
+
+    .leaderboard-container {
+        max-height: 70vh; /* Reduce height for smaller screens */
+    }
+}

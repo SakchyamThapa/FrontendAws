@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="author" content="Dibbeshwor Acharya" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Form</title>
+    <link rel="stylesheet" href="../Css/feedback.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="logo">
+          <img src="/src/download.png" alt="Logo" />
+          <span class="logo-text">Sonic Points</span>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="#" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">Work Management</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">Leaderboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">Redeem</a>
+          </li>
+        </ul>
+        <div class="profile-section">
+          <span class="admin-text">Admin User</span>
+          <div class="profile-icon">
+            <img src="/icons/account_circle_FILL0_wght400_GRAD0_opsz48.png" alt="Profile" />
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Feedback form -->
+    <section class="content-section">
+      <div class="feedback-form">
+        <h2>FEEDBACK</h2>
+        <form onsubmit="return formValidate();">
+          <div class="form-group">
+            <input
+              type="text"
+              id="name"
+              name="Name"
+              placeholder="Full Name"
+              class="form-control"
+              autofocus
+              required
+            />
+          </div>
+          
+          <div class="form-group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              class="form-control"
+              required
+            />
+          </div>
+          
+          <div class="form-group">
+            <textarea
+              id="comment"
+              name="comment"
+              placeholder="Tell us more"
+              class="form-control"
+              required
+            ></textarea>
+          </div>
+
+          <div class="feedback-type">
+            <label>
+              <input type="radio" name="feedBack-Type" value="complaint" />
+              Complaint
+            </label>
+            <label>
+              <input type="radio" name="feedBack-Type" value="suggestion" />
+              Suggestion
+            </label>
+            <label>
+              <input type="radio" name="feedBack-Type" value="other" checked />
+              Other
+            </label>
+          </div>
+
+          <div class="rating">
+            <h4>Rate Us:</h4>
+            <button type="button" onclick="rate('meh')">
+              <img
+                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
+                alt="rating meh"
+                id="mehRating"
+              />
+            </button>
+            <button type="button" onclick="rate('smile')">
+              <img
+                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
+                alt="rating smile"
+                id="smileRating"
+              />
+            </button>
+            <button type="button" onclick="rate('happy')">
+              <img
+                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
+                alt="rating happy"
+                id="happyRating"
+              />
+            </button>
+          </div>
+
+          <button type="submit" class="submit-button">Submit Feedback</button>
+        </form>
+      </div>
+    </section>
+    <script type="module" src="/Js/feedback.js"></script>
+    
+  </body>
+</html>

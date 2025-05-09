@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Work Management</title>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="../Css/WorkManagement.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+      <span>Sonic Points</span>
+    </div>
+    <div class="nav-links">
+      <a href="./AdminPanel.html" class="nav-link">Dashboard</a>
+      <a href="#" class="nav-link active" id="work-management-link">Work Management</a>
+      <a href="Leaderboard.html" class="nav-link">Leaderboard</a>
+      <a href="Redeem.html" class="nav-link">Redeem</a>
+    </div>
+    <div class="user-info">
+      <span>Admin User</span>
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <h1><i class="fas fa-tasks"></i> Work Management</h1>
+      <p>Manage your tasks with ease - drag and drop to change status</p>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Task Creation Form -->
+      <div class="task-form glass-panel">
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="task-title" class="form-control" placeholder="Task title..." />
+          </div>
+          <div class="form-group">
+            <select id="task-priority" class="form-control">
+              <option value="Low">Low Priority</option>
+              <option value="Medium" selected>Medium Priority</option>
+              <option value="High">High Priority</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="date" id="task-due-date" class="form-control" />
+          </div>
+          <div class="form-group">
+            <input type="number" id="task-points" class="form-control" placeholder="Reward points..." min="0" value="10" />
+          </div>
+          <div class="form-group" style="flex: 0 0 auto;">
+            <button id="add-task-btn" class="btn btn-primary">
+              <i class="fas fa-plus-circle"></i> Add Task
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea id="task-description" class="form-control" placeholder="Task description..."></textarea>
+        </div>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="board">
+        <!-- Backlog Column -->
+        <div class="column glass-panel" data-status="backlog">
+          <div class="column-header">
+            <h3><i class="fas fa-list"></i> Backlog</h3>
+            <span class="task-count" id="backlog-count">0</span>
+          </div>
+          <div class="task-container" id="backlog"></div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="column glass-panel" data-status="in-progress">
+          <div class="column-header">
+            <h3><i class="fas fa-spinner"></i> In Progress</h3>
+            <span class="task-count" id="in-progress-count">0</span>
+          </div>
+          <div class="task-container" id="in-progress"></div>
+        </div>
+
+        <!-- Review Column -->
+        <div class="column glass-panel" data-status="review">
+          <div class="column-header">
+            <h3><i class="fas fa-search"></i> Review</h3>
+            <span class="task-count" id="review-count">0</span>
+          </div>
+          <div class="task-container" id="review"></div>
+        </div>
+
+        <!-- Completed Column -->
+        <div class="column glass-panel" data-status="completed">
+          <div class="column-header">
+            <h3><i class="fas fa-check-circle"></i> Completed</h3>
+            <span class="task-count" id="completed-count">0</span>
+          </div>
+          <div class="task-container" id="completed"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>FYP © 2024 | Professional Work Management</p>
+    </footer>
+  </div>
+  
+  
+  <script type="module" src="../Js/WorkManagement.js"></script>
+</body>
+
+</html>

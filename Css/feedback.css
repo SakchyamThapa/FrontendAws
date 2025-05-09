@@ -1,0 +1,265 @@
+
+/* Universal selector and body styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #65a5f2, #5d54a4);
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar styles */
+.navbar {
+  background-color: #4a76d4;
+  padding: 15px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.navbar-container {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+}
+
+.nav-item {
+  margin: 0 15px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+}
+
+.admin-text {
+  color: white;
+  margin-right: 15px;
+}
+
+.profile-icon {
+  background-color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Feedback form styling */
+.content-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.feedback-form {
+  width: 600px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 35px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: white;
+}
+
+.feedback-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.feedback-form h2:after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background: white;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.feedback-form form {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-bottom-color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+textarea.form-control {
+  min-height: 180px;
+  resize: vertical;
+}
+
+/* Feedback type section */
+.feedback-type {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.feedback-type label {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.feedback-type label:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.feedback-type input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* Rating section */
+.rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.rating h4 {
+  margin-right: 10px;
+}
+
+.rating button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.rating img {
+  width: 35px;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
+  opacity: 0.5;
+}
+
+.rating img:hover,
+.rating img.active {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+/* Submit button */
+.submit-button {
+  width: 180px;
+  padding: 12px;
+  background: linear-gradient(135deg, #7bb2ff, #6654db);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:active {
+  transform: translateY(1px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .feedback-form {
+    width: 90%;
+    padding: 25px;
+  }
+  
+  .nav-menu {
+    display: none;
+  }
+  
+  .navbar-container {
+    justify-content: space-between;
+  }
+}
