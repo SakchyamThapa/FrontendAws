@@ -1,33 +1,20 @@
+function formValidate() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const comment = document.getElementById("comment").value.trim();
 
-      // Validate form fields
-      function formValidate() {
-        const nameCheck = document.getElementById("name").value.trim();
-        const emailCheck = document.getElementById("email").value.trim();
-        const commentCheck = document.getElementById("comment").value.trim();
+  if (!name || !email || !comment) {
+    alert("All fields are required!");
+    return false;
+  }
 
-        if (!nameCheck || !emailCheck || !commentCheck) {
-          alert("Field cannot be empty!");
-          return false;
-        } else {
-          alert("Form Submitted Successfully");
-          return true;
-        }
-      }
+  // Basic email pattern check
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    alert("Please enter a valid email address.");
+    return false;
+  }
 
-      // Rating functionality
-      function rate(type) {
-        const ratings = {
-          meh: document.getElementById("mehRating"),
-          smile: document.getElementById("smileRating"),
-          happy: document.getElementById("happyRating"),
-        };
-
-        Object.keys(ratings).forEach((key) => {
-          ratings[key].style.opacity = key === type ? "1" : "0.5";
-          if (key === type) {
-            ratings[key].classList.add("active");
-          } else {
-            ratings[key].classList.remove("active");
-          }
-        });
-      }
+  alert("Form submitted successfully!");
+  return true;
+}

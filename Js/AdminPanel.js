@@ -8,11 +8,13 @@ import {
     getTokenClaim
   } from './sessionStorage.js';
   
-  // ✅ Redirect to login if not authenticated
+  //  Redirect to login if not authenticated
   if (!isAuthenticated()) {
     clearToken();
     window.location.href = "/index.html";
   }
+  const BASE_URL = "https://backendaws.onrender.com";
+
   const token = getToken();
   const urlParams = new URLSearchParams(window.location.search);
   const projectId = urlParams.get("projectId");
@@ -23,7 +25,7 @@ import {
   }
   (async function checkUserAccess() {
     try {
-      const res = await fetch(`https://localhost:7150/api/projects/${projectId}/my-role`, {
+      const res = await fetch(`${BASE_URL}/api/projects/${projectId}/my-role`, {
 
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -93,7 +95,7 @@ import {
   
     // ✅ RESET KPI
    window.resetKPI = function (params) {
-  fetch(`https://localhost:7150/api/projects/${projectId}/reset-kpi/${params.id}`, {
+  fetch(`${BASE_URL}/api/projects/${projectId}/reset-kpi/${params.id}`, {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -108,7 +110,7 @@ import {
     .catch(err => console.error("Reset KPI error:", err));
 };
 function loadUsers() {
-  fetch(`https://localhost:7150/api/projects/${projectId}/users`, {
+  fetch(`${BASE_URL}/api/projects/${projectId}/users`, {
     headers: { "Authorization": `Bearer ${token}` }
   })
   .then(res => res.json())
@@ -158,7 +160,7 @@ window.removeUser = function (userId, userName, confirmed = false) {
     return;
   }
 
-  fetch(`https://localhost:7150/api/projects/${projectId}/remove-user/${userId}`, {
+  fetch(`${BASE_URL}/api/projects/${projectId}/remove-user/${userId}`, {
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   })
@@ -182,7 +184,7 @@ window.removeUserConfirmed = function (params) {
     window.changeUserRole = function (userId, newRole) {
       if (!confirm(`Change role of user to ${newRole}?`)) return;
     
-      fetch(`https://localhost:7150/api/projects/${projectId}/change-role`, {
+      fetch(`${BASE_URL}/api/projects/${projectId}/change-role`, {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -222,7 +224,7 @@ window.removeUserConfirmed = function (params) {
         return;
       }
     
-      fetch(`https://localhost:7150/api/projects/${projectId}/add-user`, {
+      fetch(`${BASE_URL}/api/projects/${projectId}/add-user`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -238,7 +240,7 @@ window.removeUserConfirmed = function (params) {
         .catch(err => console.error("Add user error:", err));
     });
     
-    fetch(`https://localhost:7150/api/projects/${projectId}/users`, {
+   fetch(`${BASE_URL}/api/projects/${projectId}/users`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     .then(res => res.json())
@@ -278,7 +280,7 @@ window.removeUserConfirmed = function (params) {
     .catch(err => console.error("Failed to load users:", err));
   
     function loadTaskStatusCounts() {
-      fetch(`https://localhost:7150/api/tasks/project/${projectId}/status-counts`, {
+      fetch(`${BASE_URL}/api/tasks/project/${projectId}/status-counts`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -351,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                fetch(`https://localhost:7150/api/redeemableitems`, {
+                fetch(`${BASE_URL}/api/redeemableitems`, {
 
                     method: 'POST',
                     headers: {
@@ -388,7 +390,7 @@ function loadRedeemableItems() {
   const tableBody = document.getElementById('redeemableItemsTableBody');
   if (!tableBody) return;
 
-  fetch(`https://localhost:7150/api/redeemableitems/project/${projectId}`, {
+  fetch(`${BASE_URL}/api/redeemableitems/project/${projectId}`, {
       headers: {
           'Authorization': `Bearer ${token}`
       }
@@ -451,7 +453,7 @@ window.editRedeemableItem = function(itemId) {
 
 window.deleteRedeemableItem = function(itemId) {
     if (confirm('Are you sure you want to delete this item?')) {
-      fetch(`https://localhost:7150/api/redeemableitems/${itemId}`, {
+      fetch(`${BASE_URL}/api/redeemableitems/${itemId}`, {
 
             method: 'DELETE',
             headers: {
@@ -489,7 +491,7 @@ window.deleteRedeemableItem = function(itemId) {
     const token = getToken();
     
     // Fetch progress trend data
-    fetch(`https://localhost:7150/api/tasks/project/${projectId}/progress-trend`, {
+    fetch(`${BASE_URL}/api/tasks/project/${projectId}/progress-trend`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

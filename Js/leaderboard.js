@@ -13,7 +13,7 @@ if (!isAuthenticated()) {
   clearToken();
   window.location.href = "/index.html";
 }
-
+const BASE_URL = "https://backendaws.onrender.com";
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Append projectId to all navigation links that don't have it
   document.querySelectorAll(".nav-link").forEach(link => {
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function fetchUserPoints(projectId) {
   const token = getToken();
   try {
-    const response = await fetch(`https://localhost:7150/api/redeemableitems/points/${projectId}`, {
+    const response = await fetch(`${BASE_URL}/api/redeemableitems/points/${projectId}`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -69,7 +69,7 @@ async function fetchUserPoints(projectId) {
 async function fetchLeaderboard(projectId, page = 1, size = 20) {
   const token = getToken();
   try {
-    const response = await fetch(`https://localhost:7150/api/leaderboard/${projectId}?pageNumber=${page}&pageSize=${size}`, {
+    const response = await fetch(`${BASE_URL}/api/leaderboard/${projectId}?pageNumber=${page}&pageSize=${size}`, {
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"

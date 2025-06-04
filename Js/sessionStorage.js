@@ -250,7 +250,7 @@ async function refreshToken() {
     const currentToken = getToken();
     if (!currentToken) return;
     
-    const response = await fetch('https://localhost:7146/api/auth/refresh', {
+    const response = await fetch('https://backendaws.onrender.com/api/auth/refresh', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${currentToken}`,
@@ -265,7 +265,6 @@ async function refreshToken() {
       console.log("Token refreshed successfully");
     } else {
       console.error("Failed to refresh token");
-      // Don't clear token here - let normal expiration handle it
     }
   } catch (err) {
     console.error("Token refresh error:", err);

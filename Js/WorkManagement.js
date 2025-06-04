@@ -65,31 +65,32 @@ if (!projectId) {
 }
 
 document.body.insertAdjacentHTML('beforeend', editModalHTML);
- function refreshTaskStatusCounts() {
-    fetch(`https://localhost:7150/api/tasks/project/${projectId}/status-counts`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
+function refreshTaskStatusCounts() {
+  fetch(`${API_BASE_URL}/tasks/project/${projectId}/status-counts`, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
+    .then(async res => {
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText);
       }
+      return res.json();
     })
-      .then(async res => {
-        if (!res.ok) {
-          const errText = await res.text();
-          throw new Error(errText);
-        }
-        return res.json();
-      })
-      .then(counts => {
-        const cards = document.querySelectorAll(".stat-card");
-        cards[0].querySelector(".stat-value").textContent = counts.Backlog;
-        cards[1].querySelector(".stat-value").textContent = counts.InProgress;
-        cards[2].querySelector(".stat-value").textContent = counts.Review;
-        cards[3].querySelector(".stat-value").textContent = counts.Completed;
-      })
-      .catch(err => console.error("Task status count refresh error:", err));
-  }
-const API_BASE_URL = "https://localhost:7150/api";
+    .then(counts => {
+      const cards = document.querySelectorAll(".stat-card");
+      cards[0].querySelector(".stat-value").textContent = counts.Backlog;
+      cards[1].querySelector(".stat-value").textContent = counts.InProgress;
+      cards[2].querySelector(".stat-value").textContent = counts.Review;
+      cards[3].querySelector(".stat-value").textContent = counts.Completed;
+    })
+    .catch(err => console.error("Task status count refresh error:", err));
+}
 
-// ✅ DOM Elements
+const API_BASE_URL = "https://backendaws.onrender.com/api";
+
+//  DOM Elements
 const taskTitleInput = document.getElementById("task-title");
 const taskPrioritySelect = document.getElementById("task-priority");
 const taskDescriptionInput = document.getElementById("task-description");
@@ -251,7 +252,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 });
 
-// ✅ Set default due date to tomorrow
+//  Set default due date to tomorrow
 function setDefaultDueDate(input = taskDueDateInput) {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -259,7 +260,7 @@ function setDefaultDueDate(input = taskDueDateInput) {
 }
 
 
-// ✅ Load tasks for current project
+//  Load tasks for current project
 async function loadProjectTasks() {
   try {
     const res = await fetch(`${API_BASE_URL}/tasks/project/${projectId}`, {
@@ -299,7 +300,7 @@ async function loadProjectTasks() {
 
 
 
-// ✅ Create new task
+//  Create new task
 async function createNewTask() {
   const title = taskTitleInput.value.trim();
   const description = taskDescriptionInput.value.trim();
@@ -352,7 +353,7 @@ async function createNewTask() {
 
 
 
-// ✅ Reset task form
+//  Reset task form
 function resetForm() {
   taskTitleInput.value = "";
   taskDescriptionInput.value = "";
@@ -361,7 +362,7 @@ function resetForm() {
   taskTitleInput.focus();
 }
 
-// ✅ Render all tasks
+//  Render all tasks
 function renderAllTasks() {
   taskContainers.forEach(c => c.innerHTML = "");
   for (const [status, list] of Object.entries(tasks)) {
@@ -387,7 +388,7 @@ function setupDragAndDrop() {
 }
 
 
-// ✅ Render individual task
+//  Render individual task
 function renderTask(task, container) {
   if (!container) {
     console.error("❗ Cannot render task: Container not found for task:", task);
@@ -445,7 +446,7 @@ container.appendChild(el);
 
 
 
-// ✅ Delete task
+// Delete task
 async function deleteTask(id, el) {
   if (!confirm("Delete this task?")) return;
   try {
@@ -462,7 +463,7 @@ async function deleteTask(id, el) {
   }
 }
 
-// ✅ Update column counters
+//  Update column counters
 function updateColumnCounts() {
   for (const status in tasks) {
     document.getElementById(`${status}-count`).textContent = tasks[status].length;
@@ -483,7 +484,7 @@ function handleDragEnd() {
   this.classList.remove("dragging");
 }
 
-// ✅ Handle drop and update status
+//  Handle drop and update status
 async function handleDrop(e) {
   e.preventDefault();
   this.classList.remove("drag-over");

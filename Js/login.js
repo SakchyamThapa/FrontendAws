@@ -14,6 +14,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
     link.href = href.toString();
   }
 });
+const BASE_URL = "https://backendaws.onrender.com/api";
+
 
 
   // 🔁 Switch between login and register UI
@@ -108,7 +110,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
     if (!password) return showError('loginPassword', 'loginPasswordError', 'Password is required');
 
     try {
-      const res = await fetch('https://localhost:7150/api/auth/login', {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -173,7 +176,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
     if (!isValid) return;
 
     try {
-      const res = await fetch('https://localhost:7150/api/auth/register', {
+      const res = await fetch(`${BASE_URL}/auth/register`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })

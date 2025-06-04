@@ -101,7 +101,8 @@ function showMessage(title, message) {
 // Function to fetch user points from API (if you have an endpoint for this)
 async function fetchUserPoints() {
   try {
-    const response = await fetch(`https://localhost:7150/api/redeemableitems/points/${projectId}`, {
+    const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/points/${projectId}`, {
+
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -137,7 +138,8 @@ async function fetchRedeemableItems() {
     `;
     
     // Make API call
-    const response = await fetch(`https://localhost:7150/api/redeemableitems/project/${projectId}`, {
+   const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/project/${projectId}`, {
+
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -220,7 +222,8 @@ async function handleRedeem(itemId) {
     }
     
     // Send redemption request to API
-    const response = await fetch('https://localhost:7150/api/rewards/redeem', {
+    const response = await fetch('https://backendaws.onrender.com/api/rewards/redeem', {
+
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -321,7 +324,8 @@ async function loadRedemptionHistory() {
     `;
     
     // Make API call to the project history endpoint
-    const response = await fetch(`https://localhost:7150/api/rewards/history/${projectId}`, {
+    const response = await fetch(`https://backendaws.onrender.com/api/rewards/history/${projectId}`, {
+
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
