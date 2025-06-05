@@ -576,6 +576,7 @@ async function handleDrop(e) {
     console.error("Error updating task status:", err);
   }
 }
+
 // Chat UI elements
 const chatToggleBtn = document.getElementById("chat-toggle-btn");
 const chatContainer = document.getElementById("chat-container");
@@ -602,24 +603,61 @@ async function sendMessage() {
 
   appendMessage("Loading...", 'assistant');
 
+  const token = getToken();
+ 
+
+  let projectId = sessionStorage.getItem("projectId");
+
+
+if (!projectId) {
+  const urlParams = new URLSearchParams(window.location.search);
+  projectId = urlParams.get("projectId");
+  if (projectId) sessionStorage.setItem("projectId", projectId); // store for future
+}
+
+if (!projectId) {
+  updateLastAssistantMessage("❌ Project ID not found. Please reload this page from your project dashboard.");
+  return;
+}
+
+
   try {
     const res = await fetch(`${API_BASE_URL}/tasks/assistant?projectId=${projectId}`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ message })
     });
 
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = `Error ${res.status}`;
+
+      try {
+        const errorJson = JSON.parse(errorText);
+        errorMsg += `: ${errorJson.message || errorText}`;
+        if (errorJson.errors?.projectId) {
+          errorMsg += ` - ${errorJson.errors.projectId.join(', ')}`;
+        }
+      } catch {
+        errorMsg += `: ${errorText}`;
+      }
+
+      updateLastAssistantMessage(errorMsg);
+      return;
+    }
 
     const data = await res.json();
     updateLastAssistantMessage(data.reply);
   } catch (error) {
-    updateLastAssistantMessage(`Error: ${error.message}`);
+    console.error("Fetch error:", error);
+    updateLastAssistantMessage(`❌ Error: ${error.message}`);
   }
 }
+
+
 
 function appendMessage(text, role) {
   const msgEl = document.createElement('div');
