@@ -7,6 +7,9 @@ import {
   hasRole,
   getTokenClaim
 } from './sessionStorage.js';
+
+
+
 const editModalHTML = `
   <div id="edit-task-modal" class="modal">
     <div class="modal-content glass-panel">
@@ -48,14 +51,33 @@ const editModalHTML = `
       </div>
     </div>
   </div>`;
-// ✅ Redirect to login if not authenticated
+
+// Constants
+const API_BASE_URL = "https://backendaws.onrender.com/api";
+
+// Global variables
+let tasks = {
+  'backlog': [],
+  'in-progress': [],
+  'review': [],
+  'completed': []
+};
+let currentEditTaskId = null;
+let draggedTask = null;
+
+// DOM elements (will be initialized after DOM content loaded)
+let taskTitleInput, taskPrioritySelect, taskDescriptionInput, taskPointsInput, taskDueDateInput;
+let addTaskBtn, taskContainers;
+let editTaskModal, editTaskTitleInput, editTaskDescriptionInput, editTaskPrioritySelect;
+let editTaskDueDateInput, editTaskPointsInput, saveEditTaskBtn, modalCloseButtons;
+
+// Redirect to login if not authenticated
 if (!isAuthenticated()) {
   clearToken();
   window.location.href = "/index.html";
 }
 
-const token = getToken(); // 
-
+const token = getToken();
 const urlParams = new URLSearchParams(window.location.search);
 const projectId = urlParams.get("projectId");
 
@@ -64,9 +86,91 @@ if (!projectId) {
   window.location.href = "/Html/Home.html";
 }
 
-document.body.insertAdjacentHTML('beforeend', editModalHTML);
+// Main initialization
+document.addEventListener("DOMContentLoaded", async () => {
+  // Insert modal HTML first
+  document.body.insertAdjacentHTML('beforeend', editModalHTML);
+  
+  // Initialize DOM elements
+  initializeDOMElements();
+  
+  // Setup event listeners
+  setupEventListeners();
+  
+  // Initialize page
+  setDefaultDueDate();
+  setupDragAndDrop();
+  await loadProjectTasks();
+  
+  // Update navigation links with project ID
+  updateNavigationLinks();
+});
+
+function initializeDOMElements() {
+  // Main form elements
+  taskTitleInput = document.getElementById("task-title");
+  taskPrioritySelect = document.getElementById("task-priority");
+  taskDescriptionInput = document.getElementById("task-description");
+  taskPointsInput = document.getElementById("task-points");
+  taskDueDateInput = document.getElementById("task-due-date");
+  addTaskBtn = document.getElementById("add-task-btn");
+  taskContainers = document.querySelectorAll(".task-container");
+  
+  // Edit modal elements
+  editTaskModal = document.getElementById("edit-task-modal");
+  editTaskTitleInput = document.getElementById("edit-task-title");
+  editTaskDescriptionInput = document.getElementById("edit-task-description");
+  editTaskPrioritySelect = document.getElementById("edit-task-priority");
+  editTaskDueDateInput = document.getElementById("edit-task-due-date");
+  editTaskPointsInput = document.getElementById("edit-task-points");
+  saveEditTaskBtn = document.getElementById("save-edit-task-btn");
+  modalCloseButtons = document.querySelectorAll(".modal-close, .modal-close-btn");
+}
+
+function setupEventListeners() {
+  // Add task button
+  addTaskBtn.addEventListener("click", createNewTask);
+  
+  // Edit modal event listeners
+  modalCloseButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      editTaskModal.style.display = "none";
+    });
+  });
+  
+  // Close modal when clicking outside
+  window.addEventListener("click", event => {
+    if (event.target === editTaskModal) {
+      editTaskModal.style.display = "none";
+    }
+  });
+  
+  // Save edited task button
+  saveEditTaskBtn.addEventListener("click", saveEditedTask);
+}
+
+function updateNavigationLinks() {
+  const currentProjectId = new URLSearchParams(window.location.search).get("projectId");
+  
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (currentProjectId && !link.href.includes("projectId")) {
+      const href = new URL(link.href);
+      href.searchParams.set("projectId", currentProjectId);
+      link.href = href.toString();
+    }
+  });
+}
+
+// Set default due date to tomorrow
+function setDefaultDueDate(input = taskDueDateInput) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  input.valueAsDate = tomorrow;
+}
+
+// Refresh task status counts
 function refreshTaskStatusCounts() {
-  fetch(`${API_BASE_URL}/tasks/project/${projectId}/status-counts`, {
+  fetch(`${API_BASE_URL}/tasks/project/${projectId}/status-counts`,{
     headers: {
       "Authorization": `Bearer ${token}`
     }
@@ -79,188 +183,20 @@ function refreshTaskStatusCounts() {
       return res.json();
     })
     .then(counts => {
-      const cards = document.querySelectorAll(".stat-card");
-      cards[0].querySelector(".stat-value").textContent = counts.Backlog;
-      cards[1].querySelector(".stat-value").textContent = counts.InProgress;
-      cards[2].querySelector(".stat-value").textContent = counts.Review;
-      cards[3].querySelector(".stat-value").textContent = counts.Completed;
+      const stat0 = document.getElementById("backlog-count");
+      const stat1 = document.getElementById("in-progress-count");
+      const stat2 = document.getElementById("review-count");
+      const stat3 = document.getElementById("completed-count");
+
+      stat0.textContent = counts.Backlog ?? 0;
+      stat1.textContent = counts.InProgress ?? 0;
+      stat2.textContent = counts.Review ?? 0;
+      stat3.textContent = counts.Completed ?? 0;
     })
     .catch(err => console.error("Task status count refresh error:", err));
 }
 
-const API_BASE_URL = "https://backendaws.onrender.com/api";
-
-//  DOM Elements
-const taskTitleInput = document.getElementById("task-title");
-const taskPrioritySelect = document.getElementById("task-priority");
-const taskDescriptionInput = document.getElementById("task-description");
-const taskPointsInput = document.getElementById("task-points");
-const taskDueDateInput = document.getElementById("task-due-date");
-const addTaskBtn = document.getElementById("add-task-btn");
-const taskContainers = document.querySelectorAll(".task-container");
-
-let currentEditTaskId = null;
-
-const editTaskModal = document.getElementById("edit-task-modal");
-const editTaskTitleInput = document.getElementById("edit-task-title");
-const editTaskDescriptionInput = document.getElementById("edit-task-description");
-const editTaskPrioritySelect = document.getElementById("edit-task-priority");
-const editTaskDueDateInput = document.getElementById("edit-task-due-date");
-const editTaskPointsInput = document.getElementById("edit-task-points");
-const saveEditTaskBtn = document.getElementById("save-edit-task-btn");
-const modalCloseButtons = document.querySelectorAll(".modal-close, .modal-close-btn");
-modalCloseButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    editTaskModal.style.display = "none";
-  });
-});
-
-// Close modal when clicking outside of it
-window.addEventListener("click", event => {
-  if (event.target === editTaskModal) {
-    editTaskModal.style.display = "none";
-  }
-});
-
-// Save edited task button
-saveEditTaskBtn.addEventListener("click", saveEditedTask);
-
-// Function to open edit modal with task data
-function openEditTaskModal(taskId) {
-  // Find the task by ID across all status categories
-  let taskToEdit = null;
-  
-  for (const status in tasks) {
-    const found = tasks[status].find(t => t.id === taskId);
-    if (found) {
-      taskToEdit = found;
-      break;
-    }
-  }
-  
-  if (!taskToEdit) {
-    console.error("Task not found for editing:", taskId);
-    return;
-  }
-  
-  // Store the current task ID for use when saving
-  currentEditTaskId = taskId;
-  
-  // Fill in the form fields with task data
-  editTaskTitleInput.value = taskToEdit.title || "";
-  editTaskDescriptionInput.value = taskToEdit.description || "";
-  
-  // Set priority dropdown
-  const priorityNames = ["Low", "Medium", "High"];
-  editTaskPrioritySelect.value = priorityNames[taskToEdit.priority] || "Medium";
-  
-  // Set due date
-  if (taskToEdit.dueDate) {
-    const dueDate = new Date(taskToEdit.dueDate);
-    const formattedDate = dueDate.toISOString().split('T')[0];
-    editTaskDueDateInput.value = formattedDate;
-  } else {
-    setDefaultDueDate(editTaskDueDateInput);
-  }
-  
-  // Set points
-  editTaskPointsInput.value = taskToEdit.rewardPoints || 10;
-  
-  // Show the modal
-  editTaskModal.style.display = "block";
-}
-
-// Function to save edited task
-async function saveEditedTask() {
-  if (!currentEditTaskId) return;
-  
-  const title = editTaskTitleInput.value.trim();
-  const description = editTaskDescriptionInput.value.trim();
-  const priorityMap = { "Low": 0, "Medium": 1, "High": 2 };
-  const priority = priorityMap[editTaskPrioritySelect.value];
-  const points = parseInt(editTaskPointsInput.value) || 0;
-  const dueDateRaw = editTaskDueDateInput.value;
-  
-  if (!title) {
-    alert("Task title is required.");
-    return;
-  }
-  
-  if (!dueDateRaw) {
-    alert("Please select a due date.");
-    return;
-  }
-  
-  const dueDate = new Date(dueDateRaw).toISOString();
-  
-  const payload = {
-    title,
-    description,
-    priority,
-    rewardPoints: points,
-    dueDate
-  };
-  
-  try {
-    const res = await fetch(`${API_BASE_URL}/tasks/${currentEditTaskId}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error("Failed to update task: " + errorText);
-    }
-    
-    // Close modal
-    editTaskModal.style.display = "none";
-    
-    // Reload tasks to refresh the UI
-    await loadProjectTasks();
-    refreshTaskStatusCounts(); 
-    currentEditTaskId = null;
-  } catch (err) {
-    console.error("Error updating task:", err);
-    alert("Failed to update task: " + err.message);
-  }
-}
-let tasks = {
-  'backlog': [],
-  'in-progress': [],
-  'review': [],
-  'completed': []
-};
-
-document.addEventListener("DOMContentLoaded", async () => {
-  setDefaultDueDate();
-  addTaskBtn.addEventListener("click", createNewTask);
-  setupDragAndDrop();
-  await loadProjectTasks();
-  const currentProjectId = new URLSearchParams(window.location.search).get("projectId");
-
-document.querySelectorAll(".nav-link").forEach(link => {
-  if (currentProjectId && !link.href.includes("projectId")) {
-    const href = new URL(link.href);
-    href.searchParams.set("projectId", currentProjectId);
-    link.href = href.toString();
-  }
-});
-
-});
-
-//  Set default due date to tomorrow
-function setDefaultDueDate(input = taskDueDateInput) {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  input.valueAsDate = tomorrow;
-}
-
-
-//  Load tasks for current project
+// Load tasks for current project
 async function loadProjectTasks() {
   try {
     const res = await fetch(`${API_BASE_URL}/tasks/project/${projectId}`, {
@@ -271,7 +207,6 @@ async function loadProjectTasks() {
 
     const rawData = await res.json();
     const taskList = Array.isArray(rawData) ? rawData : (rawData.$values || []);
-  
 
     tasks = { 'backlog': [], 'in-progress': [], 'review': [], 'completed': [] };
 
@@ -297,10 +232,7 @@ async function loadProjectTasks() {
   }
 }
 
-
-
-
-//  Create new task
+// Create new task
 async function createNewTask() {
   const title = taskTitleInput.value.trim();
   const description = taskDescriptionInput.value.trim();
@@ -350,10 +282,7 @@ async function createNewTask() {
   }
 }
 
-
-
-
-//  Reset task form
+// Reset task form
 function resetForm() {
   taskTitleInput.value = "";
   taskDescriptionInput.value = "";
@@ -362,37 +291,24 @@ function resetForm() {
   taskTitleInput.focus();
 }
 
-//  Render all tasks
+// Render all tasks
 function renderAllTasks() {
   taskContainers.forEach(c => c.innerHTML = "");
   for (const [status, list] of Object.entries(tasks)) {
     const container = document.getElementById(status);
     if (!container) {
       console.error(`❗ Container not found for status '${status}'. Check if div with id="${status}" exists.`);
-      continue; // Skip rendering this group safely
+      continue;
     }
     list.forEach(t => renderTask(t, container));
   }
 }
-function setupDragAndDrop() {
-  taskContainers.forEach(c => {
-    c.addEventListener("dragover", e => {
-      e.preventDefault();
-      c.classList.add("drag-over");
-    });
-    c.addEventListener("dragleave", e => {
-      c.classList.remove("drag-over");
-    });
-    c.addEventListener("drop", handleDrop);
-  });
-}
 
-
-//  Render individual task
+// Render individual task
 function renderTask(task, container) {
   if (!container) {
     console.error("❗ Cannot render task: Container not found for task:", task);
-    return; // Exit safely without crashing
+    return;
   }
 
   const el = document.createElement("div");
@@ -410,41 +326,39 @@ function renderTask(task, container) {
   const dueHtml = `<div class="task-due-date ${isOverdue ? 'overdue' : ''}"><i class="fas fa-calendar-alt"></i> ${dueDate.toLocaleDateString()}</div>`;
 
   el.innerHTML = `
-  <div class="task-header">
-    <h4 class="task-title">${task.title}</h4>
-    <div class="task-actions">
-      <button class="btn-edit"><i class="fas fa-edit"></i></button>
-      <button class="btn-delete"><i class="fas fa-trash"></i></button>
+    <div class="task-header">
+      <h4 class="task-title">${task.title}</h4>
+      <div class="task-actions">
+        <button class="btn-edit"><i class="fas fa-edit"></i></button>
+        <button class="btn-delete"><i class="fas fa-trash"></i></button>
+      </div>
     </div>
-  </div>
-  <div class="task-info">
-    <div class="task-priority priority-${priorityName.toLowerCase()}">${priorityName} Priority</div>
-    ${points}
-  </div>
-  ${dueHtml}
-  <div class="task-description">${task.description || ""}</div>
-`;
+    <div class="task-info">
+      <div class="task-priority priority-${priorityName.toLowerCase()}">${priorityName} Priority</div>
+      ${points}
+    </div>
+    ${dueHtml}
+    <div class="task-description">${task.description || ""}</div>
+  `;
 
-const status = typeof task.status === 'number' ? task.status : parseInt(task.status);
+  const status = typeof task.status === 'number' ? task.status : parseInt(task.status);
 
-if (status === 2) { // 2 = Review
-  const completeBtn = document.createElement("button");
-  completeBtn.className = "btn-complete";
-  completeBtn.innerHTML = `<i class="fas fa-check"></i> Complete`;
-  completeBtn.addEventListener("click", () => completeTask(task.id));
-  el.querySelector(".task-actions").appendChild(completeBtn);
+  if (status === 2) { // 2 = Review
+    const completeBtn = document.createElement("button");
+    completeBtn.className = "btn-complete";
+    completeBtn.innerHTML = `<i class="fas fa-check"></i> Complete`;
+    completeBtn.addEventListener("click", () => completeTask(task.id));
+    el.querySelector(".task-actions").appendChild(completeBtn);
+  }
+
+  // Add event listeners
+  el.querySelector(".btn-delete").addEventListener("click", () => deleteTask(task.id, el));
+  el.querySelector(".btn-edit").addEventListener("click", () => openEditTaskModal(task.id));
+  el.addEventListener("dragstart", handleDragStart);
+  el.addEventListener("dragend", handleDragEnd);
+
+  container.appendChild(el);
 }
-
-// Add event listeners
-el.querySelector(".btn-delete").addEventListener("click", () => deleteTask(task.id, el));
-el.querySelector(".btn-edit").addEventListener("click", () => openEditTaskModal(task.id));
-el.addEventListener("dragstart", handleDragStart);
-el.addEventListener("dragend", handleDragEnd);
-
-container.appendChild(el);
-}
-
-
 
 // Delete task
 async function deleteTask(id, el) {
@@ -456,23 +370,159 @@ async function deleteTask(id, el) {
     });
     el.remove();
     await loadProjectTasks();
-    refreshTaskStatusCounts(); 
-
+    refreshTaskStatusCounts();
   } catch (err) {
     console.error("Error deleting task:", err);
   }
 }
 
-//  Update column counters
+// Update column counters
 function updateColumnCounts() {
   for (const status in tasks) {
-    document.getElementById(`${status}-count`).textContent = tasks[status].length;
+    const countElement = document.getElementById(`${status}-count`);
+    if (countElement) {
+      countElement.textContent = tasks[status].length;
+    }
   }
 }
 
+// Function to open edit modal with task data
+function openEditTaskModal(taskId) {
+  let taskToEdit = null;
+  
+  for (const status in tasks) {
+    const found = tasks[status].find(t => t.id === taskId);
+    if (found) {
+      taskToEdit = found;
+      break;
+    }
+  }
+  
+  if (!taskToEdit) {
+    console.error("Task not found for editing:", taskId);
+    return;
+  }
+  
+  currentEditTaskId = taskId;
+  
+  editTaskTitleInput.value = taskToEdit.title || "";
+  editTaskDescriptionInput.value = taskToEdit.description || "";
+  
+  const priorityNames = ["Low", "Medium", "High"];
+  editTaskPrioritySelect.value = priorityNames[taskToEdit.priority] || "Medium";
+  
+  if (taskToEdit.dueDate) {
+    const dueDate = new Date(taskToEdit.dueDate);
+    const formattedDate = dueDate.toISOString().split('T')[0];
+    editTaskDueDateInput.value = formattedDate;
+  } else {
+    setDefaultDueDate(editTaskDueDateInput);
+  }
+  
+  editTaskPointsInput.value = taskToEdit.rewardPoints || 10;
+  
+  editTaskModal.style.display = "block";
+}
 
+// Function to save edited task
+async function saveEditedTask() {
+  if (!currentEditTaskId) return;
+  
+  const title = editTaskTitleInput.value.trim();
+  const description = editTaskDescriptionInput.value.trim();
+  const priorityMap = { "Low": 0, "Medium": 1, "High": 2 };
+  const priority = priorityMap[editTaskPrioritySelect.value];
+  const points = parseInt(editTaskPointsInput.value) || 0;
+  const dueDateRaw = editTaskDueDateInput.value;
+  
+  if (!title) {
+    alert("Task title is required.");
+    return;
+  }
+  
+  if (!dueDateRaw) {
+    alert("Please select a due date.");
+    return;
+  }
+  
+  const dueDate = new Date(dueDateRaw).toISOString();
+  
+  const payload = {
+    title,
+    description,
+    priority,
+    rewardPoints: points,
+    dueDate
+  };
+  
+  try {
+    const res = await fetch(`${API_BASE_URL}/tasks/${currentEditTaskId}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error("Failed to update task: " + errorText);
+    }
+    
+    editTaskModal.style.display = "none";
+    
+    await loadProjectTasks();
+    refreshTaskStatusCounts(); 
+    currentEditTaskId = null;
+  } catch (err) {
+    console.error("Error updating task:", err);
+    alert("Failed to update task: " + err.message);
+  }
+}
 
-let draggedTask = null;
+// Complete task function (referenced in renderTask but not defined in original)
+async function completeTask(taskId) {
+  const payload = [{
+    taskId: parseInt(taskId),
+    newStatus: 3 // Completed status
+  }];
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks/reorder`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(error);
+    }
+
+    await loadProjectTasks();
+    refreshTaskStatusCounts();
+  } catch (err) {
+    console.error("Error completing task:", err);
+  }
+}
+
+// Drag and drop functions
+function setupDragAndDrop() {
+  taskContainers.forEach(c => {
+    c.addEventListener("dragover", e => {
+      e.preventDefault();
+      c.classList.add("drag-over");
+    });
+    c.addEventListener("dragleave", e => {
+      c.classList.remove("drag-over");
+    });
+    c.addEventListener("drop", handleDrop);
+  });
+}
 
 function handleDragStart(e) {
   draggedTask = this;
@@ -484,7 +534,7 @@ function handleDragEnd() {
   this.classList.remove("dragging");
 }
 
-//  Handle drop and update status
+// Handle drop and update status
 async function handleDrop(e) {
   e.preventDefault();
   this.classList.remove("drag-over");
@@ -522,10 +572,64 @@ async function handleDrop(e) {
 
     await loadProjectTasks(); 
     refreshTaskStatusCounts(); 
-
   } catch (err) {
     console.error("Error updating task status:", err);
   }
 }
+// Chat UI elements
+const chatToggleBtn = document.getElementById("chat-toggle-btn");
+const chatContainer = document.getElementById("chat-container");
+const chatCloseBtn = document.getElementById("chat-close-btn");
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSendBtn = document.getElementById("chat-send-btn");
 
+// Chat event listeners
+chatToggleBtn.addEventListener("click", () => chatContainer.classList.toggle("hidden"));
+chatCloseBtn.addEventListener("click", () => chatContainer.classList.add("hidden"));
 
+chatSendBtn.addEventListener("click", sendMessage);
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendMessage();
+});
+
+async function sendMessage() {
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  appendMessage(message, 'user');
+  chatInput.value = '';
+
+  appendMessage("Loading...", 'assistant');
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/tasks/assistant?projectId=${projectId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    const data = await res.json();
+    updateLastAssistantMessage(data.reply);
+  } catch (error) {
+    updateLastAssistantMessage(`Error: ${error.message}`);
+  }
+}
+
+function appendMessage(text, role) {
+  const msgEl = document.createElement('div');
+  msgEl.classList.add('message', role);
+  msgEl.textContent = text;
+  chatMessages.appendChild(msgEl);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function updateLastAssistantMessage(text) {
+  const lastMsg = chatMessages.querySelector('.message.assistant:last-child');
+  if (lastMsg) lastMsg.textContent = text;
+}

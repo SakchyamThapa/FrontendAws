@@ -88,10 +88,9 @@
                         <tr>
                             <th>User</th>
                             <th>Email</th>
-                            <th>KPI Points</th>
-                           
-                            <th>Actions</th>
                             <th>Role</th>
+                            <th>KPI Points</th>
+                            <th>Actions</th>
                             
                         </tr>
                     </thead>
@@ -102,6 +101,7 @@
                 </table>
             </div>
         </div>
+        
 
         <div class="card">
             <div class="card-header">
@@ -124,6 +124,9 @@
                 </form>
             </div>
         </div>
+        
+
+
         <!-- Add this card to your existing AdminPanel.html, after your other cards -->
 <div class="card">
     <div class="card-header">
@@ -133,6 +136,7 @@
         </button>
     </div>
     <div class="card-body">
+        
         <!-- Form that will be toggled when button is clicked -->
         <div id="addItemForm" style="display: none; margin-bottom: 20px; padding: 15px; background: rgba(255, 255, 255, 0.5); border-radius: 10px;">
             <div class="form-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -155,13 +159,18 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label" for="itemImage">Item Image</label>
-                    <input type="file" class="form-control" id="itemImage" name="Image" 
-                        accept="image/*" required />
-                    <small style="display: block; margin-top: 5px; color: var(--text-light);">
-                        Maximum file size: 2MB. Recommended dimensions: 300x300px.
-                    </small>
-                </div>
+                    
+    <label class="form-label" for="itemImage">Item Image</label>
+    <input type="file" class="form-control" id="itemImage" name="ImageUrl" 
+           accept="image/*" required />
+    <small style="display: block; margin-top: 5px; color: var(--text-light);">
+        Maximum file size: 2MB. Recommended dimensions: 300x300px.
+    </small>
+</div>
+
+
+
+<input type="hidden" name="ProjectId" value="" id="hiddenProjectId" />
                 
                 <div style="text-align: right; margin-top: 15px;">
                     <button type="submit" class="btn btn-primary">
@@ -190,6 +199,28 @@
     </div>
 </div>
     </main>
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-file-alt"></i> Project Reports</h2>
+  </div>
+  <div class="card-body" style="text-align: center;">
+    <button class="btn btn-primary" onclick="generateProjectReport()">
+      <i class="fas fa-file-contract"></i> Generate Report
+    </button>
+    <button class="btn btn-secondary" onclick="downloadAllReportsPdf()">
+      <i class="fas fa-file-download"></i> Download All Reports (PDF)
+    </button>
+  </div>
+</div>
+<div class="card" id="generatedReportCard" style="display: none;">
+  <div class="card-header">
+    <h2><i class="fas fa-file-alt"></i> Generated Report</h2>
+  </div>
+  <div class="card-body">
+    <pre id="reportContent" style="white-space: pre-wrap; background: #f9f9f9; padding: 15px; border-radius: 5px;"></pre>
+  </div>
+</div>
+
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
@@ -202,12 +233,24 @@
             </div>
         </div>
     </div>
-
+<div class="card" id="bottomDeleteCard">
+  <div class="card-body" style="text-align: center;">
+    <p>⚠️ This action will permanently delete this project.</p>
+    <button class="btn btn-danger btn-delete-project" onclick="redirectToFeedbackForm()">
+      <i class="fas fa-trash-alt"></i> Delete Project
+    </button>
+  </div>
+</div>
     <footer>
         <p>&copy; 2024 Enterprise Admin Panel. All rights reserved.</p>
     </footer>
 
     <script type="module" src="/Js/AdminPanel.js"></script>
+   
+
+  
+
+
 
 </body>
 </html>

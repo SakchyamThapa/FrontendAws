@@ -1,6 +1,6 @@
 import { getToken, isAuthenticated, clearToken } from './sessionStorage.js';
 
-// ✅ Extract projectId from URL once
+// Extract projectId from URL once
 const urlParams = new URLSearchParams(window.location.search);
 const projectId = urlParams.get("projectId");
 
@@ -13,12 +13,12 @@ if (!isAuthenticated()) {
   clearToken();
   window.location.href = "/index.html";
 }
-const BASE_URL = "https://backendaws.onrender.com";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ Append projectId to all navigation links that don't have it
+  //  Append projectId to all navigation links that don't have it
   document.querySelectorAll(".nav-link").forEach(link => {
     if (projectId && !link.href.includes("projectId")) {
-      const href = new URL(link.href);
+      const href = new URL(link.getAttribute("href"), window.location.origin);
       href.searchParams.set("projectId", projectId);
       link.href = href.toString();
     }
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function fetchUserPoints(projectId) {
   const token = getToken();
   try {
-    const response = await fetch(`${BASE_URL}/api/redeemableitems/points/${projectId}`, {
+    const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/points/${projectId}`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -64,12 +64,11 @@ async function fetchUserPoints(projectId) {
   }
 }
 
-
 // 🔐 Fetch leaderboard data
 async function fetchLeaderboard(projectId, page = 1, size = 20) {
   const token = getToken();
   try {
-    const response = await fetch(`${BASE_URL}/api/leaderboard/${projectId}?pageNumber=${page}&pageSize=${size}`, {
+    const response = await fetch(`https://backendaws.onrender.com/api/leaderboard/${projectId}?pageNumber=${page}&pageSize=${size}`, {
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -94,7 +93,7 @@ async function fetchLeaderboard(projectId, page = 1, size = 20) {
   }
 }
 
-// 🧾 Render leaderboard table
+//  Render leaderboard table
 function populateLeaderboard(data) {
   const leaderboardTable = document.getElementById("leaderboard-data");
   leaderboardTable.innerHTML = "";

@@ -15,18 +15,10 @@
           <span class="logo-text">Sonic Points</span>
         </div>
         <ul class="nav-menu">
-          <li class="nav-item">
-            <a href="#" class="nav-link">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Work Management</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Leaderboard</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Redeem</a>
-          </li>
+          <li class="nav-item"><a href="#" class="nav-link">Dashboard</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Work Management</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Leaderboard</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Redeem</a></li>
         </ul>
         <div class="profile-section">
           <span class="admin-text">Admin User</span>
@@ -41,19 +33,18 @@
     <section class="content-section">
       <div class="feedback-form">
         <h2>FEEDBACK</h2>
-        <form onsubmit="return formValidate();">
+        <form id="feedbackForm">
           <div class="form-group">
             <input
               type="text"
               id="name"
-              name="Name"
+              name="name"
               placeholder="Full Name"
               class="form-control"
               autofocus
               required
             />
           </div>
-          
           <div class="form-group">
             <input
               type="email"
@@ -64,7 +55,6 @@
               required
             />
           </div>
-          
           <div class="form-group">
             <textarea
               id="comment"
@@ -77,15 +67,15 @@
 
           <div class="feedback-type">
             <label>
-              <input type="radio" name="feedBack-Type" value="complaint" />
+              <input type="radio" name="type" value="Complaint" />
               Complaint
             </label>
             <label>
-              <input type="radio" name="feedBack-Type" value="suggestion" />
+              <input type="radio" name="type" value="Suggestion" />
               Suggestion
             </label>
             <label>
-              <input type="radio" name="feedBack-Type" value="other" checked />
+              <input type="radio" name="type" value="Other" checked />
               Other
             </label>
           </div>
@@ -93,25 +83,13 @@
           <div class="rating">
             <h4>Rate Us:</h4>
             <button type="button" onclick="rate('meh')">
-              <img
-                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
-                alt="rating meh"
-                id="mehRating"
-              />
+              <img src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png" alt="meh" id="mehRating" class="rating-icon" />
             </button>
             <button type="button" onclick="rate('smile')">
-              <img
-                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
-                alt="rating smile"
-                id="smileRating"
-              />
+              <img src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png" alt="smile" id="smileRating" class="rating-icon" />
             </button>
             <button type="button" onclick="rate('happy')">
-              <img
-                src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png"
-                alt="rating happy"
-                id="happyRating"
-              />
+              <img src="../icons/star_rate_FILL0_wght400_GRAD0_opsz48.png" alt="happy" id="happyRating" class="rating-icon" />
             </button>
           </div>
 
@@ -119,7 +97,7 @@
         </form>
       </div>
     </section>
+
     <script type="module" src="/Js/feedback.js"></script>
-    
   </body>
 </html>

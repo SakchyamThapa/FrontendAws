@@ -1,4 +1,4 @@
-// Import everything needed from your custom sessionStorage module
+//  Import everything needed from your custom sessionStorage module
 import {
   getToken,
   storeToken,
@@ -13,7 +13,6 @@ import {
 if (!isAuthenticated()) {
   window.location.href = "/index.html";
 }
-const BASE_URL = "https://backendaws.onrender.com"; 
 
 console.log("Token at script start:", getToken());
 
@@ -41,12 +40,12 @@ function waitForTokenThenInit(retries = 5) {
     return;
   }
 
-  console.log(" Token available:", token.substring(0, 10));
+  console.log("✅ Token available:", token.substring(0, 10));
   setUsername();
   fetchProjects();
 }
 
-//  DOM ready
+// ✅ DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   if (!isAuthenticated()) {
     window.location.href = "/index.html";
@@ -75,13 +74,13 @@ function setUsername() {
   }
 }
 
-//  Logout and clear session
+// ✅ Logout and clear session
 function logout() {
   clearToken();
   window.location.href = "/index.html";
 }
 
-//  Fetch projects from API
+// ✅ Fetch projects from API
 async function fetchProjects() {
   clearProjects();
 
@@ -100,7 +99,8 @@ async function fetchProjects() {
     const timeUntilExpiry = decoded.exp - nowInSeconds;
     console.log(`Token expires in: ${timeUntilExpiry} seconds`);
 
-    const response = await fetch(`${BASE_URL}/api/projects`, {
+    // <-- UPDATED URL here -->
+    const response = await fetch("https://backendaws.onrender.com/api/projects", {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -141,7 +141,7 @@ async function fetchProjects() {
   }
 }
 
-//  Create a new project
+// ✅ Create a new project
 async function createProject(event) {
   event.preventDefault();
 
@@ -164,7 +164,9 @@ async function createProject(event) {
 
   try {
     const token = getToken();
-    const response = await fetch(`${BASE_URL}/api/projects`, {
+
+    // <-- UPDATED URL here -->
+    const response = await fetch("https://backendaws.onrender.com/api/projects", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -190,19 +192,19 @@ async function createProject(event) {
   }
 }
 
-//  Show/hide the create project form
+// ✅ Show/hide the create project form
 function toggleProjectForm() {
   const form = document.getElementById("create-project-form");
   form.style.display = form.style.display === "block" ? "none" : "block";
 }
 
-//  Clear current project cards
+// ✅ Clear current project cards
 function clearProjects() {
   const projectList = document.getElementById("project-list");
   projectList.innerHTML = '';
 }
 
-//  Render a project card in the UI
+// ✅ Render a project card in the UI
 function addProjectToUI(project) {
   const projectList = document.getElementById("project-list");
   document.querySelector(".no-projects").style.display = "none";
@@ -226,7 +228,7 @@ function addProjectToUI(project) {
   projectList.appendChild(card);
 }
 
-//  Navigate to project detail page
+// ✅ Navigate to project detail page
 async function viewProject(projectId) {
   const token = getToken();
 
@@ -238,7 +240,8 @@ async function viewProject(projectId) {
   }
 
   try {
-    const res = await fetch(`${BASE_URL}/api/projects/${projectId}/my-role`, {
+    // <-- UPDATED URL here -->
+    const res = await fetch(`https://backendaws.onrender.com/api/projects/${projectId}/my-role`, {
       headers: {
         "Authorization": `Bearer ${token}`
       }
@@ -265,10 +268,7 @@ async function viewProject(projectId) {
   }
 }
 
-
-
-
-// Display a message box
+//  Display a message box
 function showMessage(message, type) {
   const box = document.getElementById("messageBox");
   box.textContent = message;

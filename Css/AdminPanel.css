@@ -32,6 +32,19 @@ body {
     line-height: 1.5;
     min-height: 100vh;
 }
+#bottomDeleteCard {
+  background-color: #fff5f5;
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #dc3545;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.btn-delete-project:hover {
+  background-color: #c82333;
+}
+
 
 /* Navbar Styling */
 .navbar {

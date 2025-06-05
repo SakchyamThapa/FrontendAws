@@ -1,4 +1,5 @@
 import { storeToken } from './sessionStorage.js';
+
 document.addEventListener('DOMContentLoaded', function () {
   const loginPage = document.getElementById('loginPage');
   const registerPage = document.getElementById('registerPage');
@@ -7,16 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const messageBox = document.getElementById('messageBox');
   const currentProjectId = new URLSearchParams(window.location.search).get("projectId");
 
-document.querySelectorAll(".nav-link").forEach(link => {
-  if (currentProjectId && !link.href.includes("projectId")) {
-    const href = new URL(link.href);
-    href.searchParams.set("projectId", currentProjectId);
-    link.href = href.toString();
-  }
-});
-const BASE_URL = "https://backendaws.onrender.com/api";
-
-
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (currentProjectId && !link.href.includes("projectId")) {
+      const href = new URL(link.href);
+      href.searchParams.set("projectId", currentProjectId);
+      link.href = href.toString();
+    }
+  });
 
   // 🔁 Switch between login and register UI
   toRegister?.addEventListener('click', function (e) {
@@ -110,8 +108,7 @@ const BASE_URL = "https://backendaws.onrender.com/api";
     if (!password) return showError('loginPassword', 'loginPasswordError', 'Password is required');
 
     try {
-      const res = await fetch(`${BASE_URL}/auth/login`, {
-
+      const res = await fetch('https://backendaws.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -127,10 +124,21 @@ const BASE_URL = "https://backendaws.onrender.com/api";
       if (res.ok && data.success && data.token) {
         storeToken(data.token);
         showMessage(data.message || 'Login successful!', 'success');
+
         setTimeout(() => {
-          location.assign("/Html/Home.html"); // 👈 change this to your dashboard/home page
+          const roles = data.roles || [];
+          console.log("Received roles:", roles);
+
+          const normalizedRoles = roles.map(role => role.toLowerCase());
+
+          if (normalizedRoles.includes('superadmin')) {
+            location.assign("/Html/SuperAdmin.html");
+          } else {
+            location.assign("/Html/Home.html");
+          }
         }, 300);
-      } else {
+      }
+      else {
         if (data.message?.includes('Invalid Email')) showError('loginEmail', 'loginEmailError', 'Email not found');
         else if (data.message?.includes('Invalid Password')) showError('loginPassword', 'loginPasswordError', 'Incorrect password');
         else showMessage(data.message || 'Login failed', 'error');
@@ -176,8 +184,7 @@ const BASE_URL = "https://backendaws.onrender.com/api";
     if (!isValid) return;
 
     try {
-      const res = await fetch(`${BASE_URL}/auth/register`, {
-
+      const res = await fetch('https://backendaws.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })

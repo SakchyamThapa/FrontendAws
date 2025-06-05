@@ -25,7 +25,8 @@ if (!projectId) {
 // ✅ Append projectId to nav links
 document.querySelectorAll(".nav-link").forEach(link => {
   if (projectId && !link.href.includes("projectId")) {
-    const href = new URL(link.href, window.location.origin); // safer base
+    const href = new URL(link.getAttribute("href"), window.location.origin);
+
     href.searchParams.set("projectId", projectId);
     link.href = href.toString();
   }
@@ -102,7 +103,6 @@ function showMessage(title, message) {
 async function fetchUserPoints() {
   try {
     const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/points/${projectId}`, {
-
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -138,8 +138,7 @@ async function fetchRedeemableItems() {
     `;
     
     // Make API call
-   const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/project/${projectId}`, {
-
+    const response = await fetch(`https://backendaws.onrender.com/api/redeemableitems/project/${projectId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -223,7 +222,6 @@ async function handleRedeem(itemId) {
     
     // Send redemption request to API
     const response = await fetch('https://backendaws.onrender.com/api/rewards/redeem', {
-
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -325,7 +323,6 @@ async function loadRedemptionHistory() {
     
     // Make API call to the project history endpoint
     const response = await fetch(`https://backendaws.onrender.com/api/rewards/history/${projectId}`, {
-
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

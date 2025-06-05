@@ -105,6 +105,23 @@
         </div>
       </div>
     </main>
+<!-- AI Chat Button -->
+<button id="chat-toggle-btn" class="chat-toggle-btn">
+  <i class="fas fa-comment-dots"></i>
+</button>
+
+<!-- AI Chat Window -->
+<div id="chat-container" class="chat-container hidden">
+  <div class="chat-header">
+    <h4>AI Assistant</h4>
+    <span id="chat-close-btn">&times;</span>
+  </div>
+  <div id="chat-messages" class="chat-messages"></div>
+  <div class="chat-input-container">
+    <input type="text" id="chat-input" placeholder="Ask something..."/>
+    <button id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
 
     <!-- Footer -->
     <footer class="footer">

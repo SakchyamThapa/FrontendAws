@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Feedback Dashboard</title>
+     <link rel="stylesheet" href="../Css/SuperAdmin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tachometer-alt"></i> Superadmin Feedback Dashboard</h1>
+            <p>Manage and analyze user feedback efficiently <span class="role-badge" id="userRole">Loading...</span></p>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search feedback by name, email, reason...">
+            </div>
+            
+            <select id="sortSelect">
+                <option value="date">Sort by Date</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="type">Sort by Type</option>
+                <option value="name">Sort by Name</option>
+            </select>
+
+            <button id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+
+            <button id="downloadPdfBtn">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+        </div>
+
+        <div class="table-container">
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading feedback data...</p>
+            </div>
+            
+            <table id="feedbackTable">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                        <th>Rating</th>
+                        <th>Reason</th>
+                        <th>Submission Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="feedbackTableBody">
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-comment-dots"></i> Feedback Details</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+   <script type="module" src="../Js/SuperAdmin.js"></script>
+   
+</body>
+</html>

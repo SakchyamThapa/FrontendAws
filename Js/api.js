@@ -1,6 +1,5 @@
 import { getToken } from './sessionStorage.js';
 
-
 const BASE_URL = "https://backendaws.onrender.com/api";
 
 export const apiCall = async (endpoint, method = "GET", data = null) => {
